@@ -1,24 +1,36 @@
 const express = require("express");
 const fs = require("fs");
-const db = require('./db/models/index');
+const db = require("./db/models/index");
 const csv = require("csv");
 
-require('dotenv').config()
+require("dotenv").config();
 
 const app = express();
 
 app.get("/", (req, res) => {
   const arquivoCsv = "arquivo.csv"; //Arquivo csv que será lido
 
-  fs.createReadStream(arquivoCsv).pipe(
-    csv.parse({
-      columns: true,
-      delimiter: ';',
-    })
-  ).on('data',async (dadosLinha) =>{
-    var dados = dadosLinha;
-    console.log(dados);
-  });
+  fs.createReadStream(arquivoCsv)
+    .pipe(
+      csv.parse({
+        columns: true,
+        delimiter: ";", //Informar o delimitador do arquivo csv exemplo: ; | ,
+      })
+    )
+    .on("data", async (dados) => {
+      console.log(dados);
+
+      // Função para não importar dados repetidos
+      const user = await db.Users.findOne({ //Alterar Users para o seu model
+        attributes: ["id"],
+        where: { cpf: dados.cpf }, //Informar qual coluna ou colunas devem ser unicas
+      });
+
+      if (!user) {
+        await db.Users.create(dados);
+        console.log("Dados Inseridos na tabela"); //Informar o model
+      }
+    });
 
   return res.status(200).send("Importação concluida");
 });
