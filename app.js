@@ -14,7 +14,7 @@ app.use(express.json());
 app.post("/", upload.single('arquivo') , (req, res) => {
 
   if(!req.file){
-    res.send("Erro ao Importar");
+    res.status(400).send("Erro ao Importar");
   }
 
   const arquivoCsv = path.join(__dirname, "public/upload/csv", req.file.filename); //Caminho para o arquivo CSV
