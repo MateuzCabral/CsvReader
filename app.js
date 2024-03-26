@@ -2,12 +2,14 @@ const express = require("express");
 const fs = require("fs");
 const db = require("./db/models/index");
 const csv = require("csv");
+const upload = require("./services/uploadCsvService");
+const path = require("path");
 
 require("dotenv").config();
 
 const app = express();
 
-app.get("/", (req, res) => {
+app.post("/", upload.single('arquivo') , (req, res) => {
   const arquivoCsv = "arquivo.csv"; //Arquivo csv que será lido
 
   fs.createReadStream(arquivoCsv)
@@ -28,7 +30,6 @@ app.get("/", (req, res) => {
 
       if (!user) {
         await db.Users.create(dados);
-        console.log("Dados Inseridos na tabela"); //Informar o model
       }
     });
 
