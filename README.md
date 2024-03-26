@@ -50,7 +50,7 @@ npx sequelize-cli model:generate --name nomedatabela --attributes id:int,name:st
 ```
 Isso criará um novo arquivo de model na pasta models.
 
-**ATENÇÃO : Crie sua model de acordo com o cabeçalho do arquivo csv**
+**ATENÇÃO : Os Atributos do model devem correlacionar com os cabeçalhos do arquivo csv**
 
 ### Criando Migrations
 As migrations são responsáveis por definir e modificar a estrutura do banco de dados. Para executar a migration, utilize o comando sequelize:
