@@ -1,3 +1,5 @@
+// EXEMPLO DE MODEL
+
 'use strict';
 const {
   Model

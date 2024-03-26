@@ -9,8 +9,15 @@ require("dotenv").config();
 
 const app = express();
 
+app.use(express.json());
+
 app.post("/", upload.single('arquivo') , (req, res) => {
-  const arquivoCsv = "arquivo.csv"; //Arquivo csv que será lido
+
+  if(!req.file){
+    res.send("Erro ao Importar");
+  }
+
+  const arquivoCsv = path.join(__dirname, "public/upload/csv", req.file.filename); //Caminho para o arquivo CSV
 
   fs.createReadStream(arquivoCsv)
     .pipe(
@@ -23,7 +30,7 @@ app.post("/", upload.single('arquivo') , (req, res) => {
       console.log(dados);
 
       // Função para não importar dados repetidos
-      const user = await db.Users.findOne({ //Alterar Users para o seu model
+      const user = await db.Users.findOne({ //Alterar Users para o seu nome do seu model
         attributes: ["id"],
         where: { cpf: dados.cpf }, //Informar qual coluna ou colunas devem ser unicas
       });
